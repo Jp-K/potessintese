@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>Aqualink</title>
+        <title>Potessintese</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -12,7 +12,7 @@
                 <div class="container-fluid">
                     <span class="navbar-brand mb-0 h1">
                         <img src="/static/temp-1.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top" id="logo">
-                        Aqualink - monitoramento
+                        Potessintese dashboard
                     </span>
                 </div>
             </nav>
@@ -31,17 +31,62 @@
                     </button>
                     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
                         <div class="offcanvas-header">
-                          <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+                          <h5 class="offcanvas-title" id="offcanvasExampleLabel">Description</h5>
                           <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
                         <div class="offcanvas-body">
-                          <div>
-                            Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+                          <div id="offcanvas-text">
+                            Lorem ipsum.
                           </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            Plant status
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                Water: OK <br/>
+                                Light: OK <br/>
+                                Temperature: OK <br/>
+                                Humidity: OK <br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            Manual operations
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                Water: 
+                                <button class="btn btn-primary custom_btn" type="button" id="btnManualWater">
+                                    Activate
+                                </button> <br/>
+                                Light: 
+                                <button class="btn btn-primary custom_btn" type="button" id="btnManualLight">
+                                    Activate
+                                </button> <br/>
+                                Temperature: 
+                                <button class="btn btn-primary custom_btn" type="button" id="btnManualTemperature">
+                                    Activate
+                                </button> <br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -53,6 +98,7 @@
             var luminosidade_anterior = document.getElementById('lumAnterior');
             var botaoAtualizar = document.getElementById('logo');
             var botaoConfirmarPlanta = document.getElementById('btnConfirmPlant');
+            var offcanvas_text = document.getElementById('offcanvas-text');
             /*function get_temperatura() {
                 fetch(`{{url}}/get/temperatura/`, { method: "GET"}).then(
                     response => response.json()
@@ -106,13 +152,13 @@
             function atualiza_info_menu(event) {
                 var selector = document.getElementById('selectPlant');
                 var selectedIndex = selector.selectedIndex;
-                console.log(selectedIndex)
                 var option = selector.options[selectedIndex];
                 fetch(`{{url}}/plant/${option.value}/`, { method: "GET"}).then(
                     response => response.json()
                 ).then( 
                     (data) => {
-                        console.log(data)
+                        console.log(data);
+                        offcanvas_text.innerHTML = data?.Desc;
                     }
                 );
             }
@@ -121,5 +167,11 @@
         </script>
     </body>
     <style>
+
+        .custom_btn {
+            --bs-btn-padding-y: .15rem; 
+            --bs-btn-padding-x: .25rem; 
+            --bs-btn-font-size: .75rem;
+        }
     </style>
 </html>
