@@ -88,7 +88,7 @@ void app_main(void)
     ESP_ERROR_CHECK(ret);
 
     ESP_LOGI(TAGwifi, "Starting Wifi Login ... ... \n"); //Utilizar menuconfig para configurar rede
-    wifi_init_sta();
+    //wifi_init_sta();
     ESP_LOGI(TAGwifi, "Wifi is Running! \n");
 
     // GPIO initialization PUMP + LED INBOARD
@@ -112,6 +112,11 @@ void app_main(void)
     // GPIO initialization DHT
     gpio_reset_pin(DHT_PIN);
     gpio_set_direction(DHT_PIN, GPIO_MODE_INPUT);
+
+
+    //TEMP_TEST
+    gpio_set_level(LED_PUMP_PIN, 1);
+    gpio_set_level(PUMP_PIN, 1);
 
     ESP_LOGI(TAGs, "Starting Web Server ... ...\n");
     setup_server(&temperature, &ldr_value, &hygro_value);
