@@ -51,10 +51,11 @@
                         </div>
                         <div class="card-body">
                             <div class="card-text">
-                                Water: OK <br/>
-                                Light: OK <br/>
-                                Temperature: OK <br/>
-                                Humidity: OK <br/>
+                                <ul class="list-group">
+                                    <li class="list-group-item">Water: <span id="waterStatusText">OK</span></li>
+                                    <li class="list-group-item">Light: <span id="lightStatusText">OK</span></li>
+                                    <li class="list-group-item">Temperature: <span id="temperatureStatusText">OK</span></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -69,18 +70,31 @@
                         </div>
                         <div class="card-body">
                             <div class="card-text">
-                                Water: 
+                                Water pump: 
                                 <button class="btn btn-primary custom_btn" type="button" id="btnManualWater">
                                     Activate
                                 </button> <br/>
-                                Light: 
-                                <button class="btn btn-primary custom_btn" type="button" id="btnManualLight">
-                                    Activate
-                                </button> <br/>
-                                Temperature: 
-                                <button class="btn btn-primary custom_btn" type="button" id="btnManualTemperature">
-                                    Activate
-                                </button> <br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            Statistics
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <div class="card-text">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">Humidity: <span id="waterStatusValue">1000</span> humidity units</li>
+                                        <li class="list-group-item">Luminosity: <span id="lightStatusValue">2500</span> Lumens</li>
+                                        <li class="list-group-item">Temperature: <span id="temperatureStatusValue">19</span> ºC</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -96,57 +110,44 @@
             // <span id="tempAnterior">--</span>
             var temperatura_anterior =  document.getElementById('tempAnterior');
             var luminosidade_anterior = document.getElementById('lumAnterior');
-            var botaoAtualizar = document.getElementById('logo');
+            var botaoAtualizar = document.getElementById('btnManualWater');
             var botaoConfirmarPlanta = document.getElementById('btnConfirmPlant');
             var offcanvas_text = document.getElementById('offcanvas-text');
-            /*function get_temperatura() {
-                fetch(`{{url}}/get/temperatura/`, { method: "GET"}).then(
-                    response => response.json()
-                ).then( 
-                    (data) => {
-                        var gaugeValueTemp = document.getElementById('valueTemperatura');
-                        gaugeValueTemp.innerText = data;
-                    }
-                );
-            }
 
-            function get_luminosidade() {
-                fetch(`{{url}}/get/luminosidade/`, { method: "GET"}).then(
-                    response => response.json()
-                ).then( 
-                    (data) => {
-                        var gaugeValueLum = document.getElementById('valueLuminosidade');
-                        gaugeValueLum.innerText = data;
-                    }
-                );
-            }*/
+            var water_status_text = document.getElementById('waterStatusText');
+            var light_status_text = document.getElementById('lightStatusText');
+            var temperature_status_text = document.getElementById('temperatureStatusText');
+
+            var water_status_value = document.getElementById('waterStatusValue');
+            var light_status_value = document.getElementById('lightStatusValue');
+            var temperature_status_value = document.getElementById('temperatureStatusValue');
 
             function get_data() {
+                fetch(`{{url}}/get/dados/`, { method: "GET"}).then(
+                    response => response.json()
+                ).then( 
+                    (data) => {
+                        water_status_text.innerText = data.agua ? data.agua : water_status_text.innerText;
+                        light_status_text.innerText = data.luz ? data.luz : light_status_text.innerText;
+                        temperature_status_text.innerText = data.temperatura ? data.temperatura : temperature_status_text.innerText;
+
+                        water_status_value.innerText = data.dados ? data.dados[2] : water_status_value.innerText;
+                        light_status_value.innerText = data.dados ? data.dados[1] : light_status_value.innerText;
+                        temperature_status_value.innerText = data.dados ? (data.dados[0] != "-1" ? data.dados[0] : temperature_status_value.innerText) : temperature_status_value.innerText;
+                    }
+                );
                 return
                 //get_luminosidade()
                 //get_temperatura()
             }
             setInterval(get_data, 4000)
-
-            function set_temperatura(event) {
-                //var temperatura_value  = document.getElementById('temperatura');
-                fetch(`{{url}}/set/temperatura/`, { method: "GET"}).then(
-                    response => response.json()
-                ).then( 
-                    (data) => {
-                        temperatura_anterior.innerText = data;
-                    }
-                );
+            function verify_pump() {
+                fetch(`{{url}}/get/verify/`, { method: "GET"});
             }
-            function set_luminosidade(event) {
-                //var luminosidade_value  = document.getElementById('luminosidade');
-                fetch(`{{url}}/set/luminosidade/`, { method: "GET"}).then(
-                    response => response.json()
-                ).then( 
-                    (data) => {
-                        luminosidade_anterior.innerText = data;
-                    }
-                );
+            setInterval(verify_pump, 120000)
+
+            function set_pump(event) {
+                fetch(`{{url}}/set/pump/`, { method: "GET"});
             }
 
             function atualiza_info_menu(event) {
@@ -162,7 +163,7 @@
                     }
                 );
             }
-            botaoAtualizar.addEventListener('click', get_data);
+            botaoAtualizar.addEventListener('click', set_pump);
             botaoConfirmarPlanta.addEventListener('click', atualiza_info_menu);
         </script>
     </body>
