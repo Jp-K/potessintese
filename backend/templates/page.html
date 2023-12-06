@@ -158,8 +158,11 @@
                     response => response.json()
                 ).then( 
                     (data) => {
-                        console.log(data);
-                        offcanvas_text.innerHTML = data?.Desc;
+                        var finalHTML = data?.Desc.concat('<br/>');
+                        finalHTML = finalHTML.concat(data?.Color);
+                        finalHTML = finalHTML.concat('<br/>', "Water needs: ", data?.WaterNeeds);
+                        finalHTML = finalHTML.concat('<br/>', "Sun needs: ", data?.SunNeeds);
+                        offcanvas_text.innerHTML = finalHTML;
                     }
                 );
             }
