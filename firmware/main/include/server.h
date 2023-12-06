@@ -22,6 +22,6 @@
 #include <lwip/api.h>
 #include <lwip/netdb.h>
 
-httpd_handle_t setup_server(int *temp_ref, int *lum_ref);
+httpd_handle_t setup_server(int *temp_ref, int *lum_ref, int *hydro_ref);
 
 #endif

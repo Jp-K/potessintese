@@ -2,13 +2,13 @@
 
 #define LED_PUMP_PIN 2 //LED da ESP
 #define DHT_PIN 4  //CABO AZUL
-#define PUMP_PIN 25 //CABO MARROM CLARO
+#define PUMP_PIN 25 //CABO AMARELO
 #define LED_PIN 26 //CABO MARROM ESCURO
 #define LDR_PIN 34 //CABO LARANJA // ADC1_CHANNEL_6
-#define HYGRO_PIN 35 //CABO COR // ADC1_CHANNEL_7
+#define HYGRO_PIN 35 //CABO ROXO // ADC1_CHANNEL_7
 
 
-static const char *TAG = "server"; // TAG for debug
+//static const char *TAG = "server"; // TAG for debug
 int pump_state = 0;
 int led_state = 0;
 int *temp = 0;  //endereço da memoria passado para temperatura
@@ -113,11 +113,12 @@ httpd_uri_t uri_pump_off = {
     .handler = pump_off_handler,
     .user_ctx = NULL};
 
-httpd_handle_t setup_server(int *temp_ref, int *lum_ref)
+httpd_handle_t setup_server(int *temp_ref, int *lum_ref, int *hygro_ref)
 {
     //led_pot_state = 0;
     temp = temp_ref;
     lum = lum_ref;
+    hygro = hygro_ref;
 
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     httpd_handle_t server = NULL;

@@ -18,9 +18,9 @@
 //Biblioteca para o DHT11
 #include "include/dht11.h"
 
-#define LED_PUMP_PIN 2 //LED da ESP32
+#define LED_PUMP_PIN 2 //LED da ESP
 #define DHT_PIN 4  //CABO AZUL
-#define PUMP_PIN 25 //CABO MARROM CLARO
+#define PUMP_PIN 25 //CABO AMARELO
 #define LED_PIN 26 //CABO MARROM ESCURO
 #define LDR_PIN 34 //CABO LARANJA // ADC1_CHANNEL_6
 #define HYGRO_PIN 35 //CABO ROXO // ADC1_CHANNEL_7
@@ -45,23 +45,23 @@ void getReadingsTask(void * parameters){
     //ADC Setup
     esp_adc_cal_characteristics_t adc1_chars;
     adc1_config_width(ADC_WIDTH_BIT_12); //WIDHT
-    esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_0, ADC_WIDTH_BIT_12, 0, &adc1_chars); //CALIBRACAO
+    esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_6, ADC_WIDTH_BIT_12, 0, &adc1_chars); //CALIBRACAO
 
     adc1_config_channel_atten(ADC1_CHANNEL_6,ADC_ATTEN_DB_6); //ATENUACAO LDR
-    adc1_config_channel_atten(ADC1_CHANNEL_7,ADC_ATTEN_DB_0); //ATENUACAO HYGRO
+    adc1_config_channel_atten(ADC1_CHANNEL_7,ADC_ATTEN_DB_6); //ATENUACAO HYGRO
 
     //Laço
     for( ;; ){
         ESP_LOGI(TAGr,"Get sensors readings");
 
         //LDR
-        ldr_value = adc1_get_raw(ADC1_CHANNEL_6);
+        ldr_value = 4095 - adc1_get_raw(ADC1_CHANNEL_6);
         //voltage = esp_adc_cal_raw_to_voltage(reading, &adc1_chars);
         ESP_LOGI(TAGr, "LDR: %d", ldr_value);
         //ESP_LOGI(TAGr, "LDR_ADC: %lu mV", voltage);
 
         //HYGRO
-        hygro_value = adc1_get_raw(ADC1_CHANNEL_7);
+        hygro_value = 4095 - adc1_get_raw(ADC1_CHANNEL_7);
         ESP_LOGI(TAGr, "HYGRO: %d", hygro_value);
 
         //DHT11
@@ -79,7 +79,7 @@ void getReadingsTask(void * parameters){
 
 void app_main(void)
 {
-    //Initialize NVS
+    //Initialize NVS/
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
       ESP_ERROR_CHECK(nvs_flash_erase());
